@@ -1,28 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ToDo from './Todo.js'
 import ToDoForm from './Todoform.js'
 
 function App() {
   const [todos, setTodos] = useState(JSON.parse(localStorage.getItem("todos")))
-  async function addTask(userInput) {
+  const addTask = (userInput) => {
     if(userInput) {
       const newItem = {
         id: Math.random().toString(36).substr(2,9),
         task: userInput,
         complete: false
       }
-      await setTodos([...todos, newItem])
-      updateLocal()
+      setTodos([...todos, newItem])
     }
   }
-
+  useEffect(() => {
+    updateLocal()
+  })
   function updateLocal() {
      localStorage.setItem("todos", JSON.stringify(todos))
   };
 
   const removeTask = (id) => {
     setTodos([...todos.filter((todo) => todo.id !== id)])
-    updateLocal()
   }
 
   const handleToggle = (id) => {
@@ -31,7 +31,6 @@ function App() {
         todo.id === id ? { ...todo, complete: !todo.complete } : {...todo }
       )
     ])
-    updateLocal()
   }
 
   const checkStorage = () => {
